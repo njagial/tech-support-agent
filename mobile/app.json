@@ -1,0 +1,47 @@
+{
+  "expo": {
+    "name": "Tech Support Agent",
+    "slug": "tech-support-agent",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#007AFF"
+    },
+    "ios": {
+      "bundleIdentifier": "com.techsupport.agent",
+      "buildNumber": "1.0.0",
+      "infoPlist": {
+        "NSCameraUsageDescription": "This app needs camera access to capture screenshots for diagnostic purposes.",
+        "NSPhotoLibraryUsageDescription": "This app needs access to your photo library to analyze screenshots.",
+        "NSBluetoothAlwaysUsageDescription": "This app needs Bluetooth access to check connectivity status."
+      }
+    },
+    "android": {
+      "package": "com.techsupport.agent",
+      "versionCode": 1,
+      "permissions": [
+        "ACCESS_NETWORK_STATE",
+        "ACCESS_WIFI_STATE",
+        "BLUETOOTH",
+        "BLUETOOTH_ADMIN",
+        "INTERNET",
+        "READ_PHONE_STATE",
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE"
+      ]
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "static"
+    },
+    "plugins": [
+      "expo-font"
+    ],
+    "experiments": {
+      "tsconfigPaths": true
+    }
+  }
+}
