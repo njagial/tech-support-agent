@@ -1,8 +1,12 @@
 # Settings Module
-from pydantic import BaseSettings
-from typing import Optional
+from pydantic_settings import BaseSettings, SettingsConfigDict
+from typing import Optional, List
+
 
 class Settings(BaseSettings):
+    """Application settings"""
+    model_config = SettingsConfigDict(env_file=".env", case_sensitive=True)
+
     APP_NAME: str = "Pocket Tech Support Agent"
     APP_VERSION: str = "1.0.0"
     DEBUG: bool = False
@@ -18,11 +22,8 @@ class Settings(BaseSettings):
     DATABASE_URL: str = "sqlite:///./tech_support.db"
 
     # CORS
-    CORS_ORIGINS: list = ["*"]
+    CORS_ORIGINS: List[str] = ["*"]
 
-    class Config:
-        env_file = ".env"
-        case_sensitive = True
 
 def get_settings() -> Settings:
     return Settings()

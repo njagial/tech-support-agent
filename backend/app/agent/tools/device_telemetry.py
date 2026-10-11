@@ -1,29 +1,17 @@
 # Device Telemetry Analysis Tool
-from langchain.tools import BaseTool
 from typing import Dict, Any
-from pydantic import BaseModel, Field
 import logging
 
 logger = logging.getLogger(__name__)
 
-class DeviceTelemetryInput(BaseModel):
-    """Input for device telemetry analyzer"""
-    telemetry_data: Dict[str, Any] = Field(description="Raw telemetry data from mobile client")
 
-class DeviceTelemetryTool(BaseTool):
+class DeviceTelemetryTool:
     """
     Analyzes device telemetry to identify potential issues.
     This tool processes hardware metrics and network state.
     """
-    name: str = "analyze_device_telemetry"
-    description: str = """
-    Analyze device telemetry data to identify hardware or network issues.
-    Input: Raw telemetry JSON containing battery, storage, memory, and network metrics.
-    Returns: Structured analysis with identified issues and severity levels.
-    """
-    args_schema: type[BaseModel] = DeviceTelemetryInput
 
-    def _run(self, telemetry_data: Dict[str, Any]) -> Dict[str, Any]:
+    def analyze(self, telemetry_data: Dict[str, Any]) -> Dict[str, Any]:
         """Synchronous analysis of telemetry"""
         issues = []
 
@@ -78,6 +66,6 @@ class DeviceTelemetryTool(BaseTool):
             "overall_health": "critical" if any(i["severity"] == "high" for i in issues) else "warning" if issues else "healthy"
         }
 
-    async def _arun(self, telemetry_data: Dict[str, Any]) -> Dict[str, Any]:
+    async def analyze_async(self, telemetry_data: Dict[str, Any]) -> Dict[str, Any]:
         """Async version"""
-        return self._run(telemetry_data)
+        return self.analyze(telemetry_data)

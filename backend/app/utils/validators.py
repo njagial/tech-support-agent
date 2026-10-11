@@ -14,8 +14,10 @@ class Validators:
     @staticmethod
     def is_valid_phone(phone: str) -> bool:
         """Validate phone number format"""
+        # Remove common separators for validation
+        cleaned = re.sub(r'[\s\-\.\(\)]', '', phone)
         pattern = r'^\+?1?\d{9,15}$'
-        return bool(re.match(pattern, phone))
+        return bool(re.match(pattern, cleaned))
 
     @staticmethod
     def sanitize_text(text: str) -> str:

@@ -1,17 +1,11 @@
 # Network Diagnostics Tool
-from langchain.tools import BaseTool
 from typing import Dict, Any
-from pydantic import BaseModel, Field
 
-class NetworkDiagnosticsInput(BaseModel):
-    telemetry_data: Dict[str, Any]
 
-class NetworkDiagnosticsTool(BaseTool):
-    name: str = "analyze_network_diagnostics"
-    description: str = "Analyze network connectivity issues including latency and DNS resolution"
-    args_schema: type[BaseModel] = NetworkDiagnosticsInput
+class NetworkDiagnosticsTool:
+    """Analyze network connectivity issues"""
 
-    def _run(self, telemetry_data: Dict[str, Any]) -> Dict[str, Any]:
+    def analyze(self, telemetry_data: Dict[str, Any]) -> Dict[str, Any]:
         network = telemetry_data.get("network", {})
         issues = []
 
@@ -41,5 +35,5 @@ class NetworkDiagnosticsTool(BaseTool):
             ] if issues else []
         }
 
-    async def _arun(self, telemetry_data: Dict[str, Any]) -> Dict[str, Any]:
-        return self._run(telemetry_data)
+    async def analyze_async(self, telemetry_data: Dict[str, Any]) -> Dict[str, Any]:
+        return self.analyze(telemetry_data)

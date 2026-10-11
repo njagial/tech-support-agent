@@ -1,25 +1,11 @@
 # Screenshot Analyzer Tool
-from langchain.tools import BaseTool
-from pydantic import BaseModel, Field
 from typing import Dict, Any, Optional
 
-class ScreenshotAnalysisInput(BaseModel):
-    image_base64: str = Field(description="Base64-encoded screenshot image")
-    user_description: Optional[str] = Field(
-        default=None,
-        description="Optional user description of what's wrong in the screenshot"
-    )
 
-class ScreenshotAnalyzerTool(BaseTool):
-    name: str = "analyze_screenshot"
-    description: str = """
-    Analyze a screenshot to identify error messages, UI issues, or misconfigurations.
-    Input: Base64-encoded image and optional user description.
-    Returns: Detailed analysis of visible issues.
-    """
-    args_schema: type[BaseModel] = ScreenshotAnalysisInput
+class ScreenshotAnalyzerTool:
+    """Analyze screenshots for error messages, UI issues, or misconfigurations"""
 
-    def _run(self, image_base64: str, user_description: Optional[str] = None) -> Dict[str, Any]:
+    def analyze(self, image_base64: str, user_description: Optional[str] = None) -> Dict[str, Any]:
         """Synchronous screenshot analysis using mock data"""
         # In production, this would call Claude Vision API
         return {
@@ -38,5 +24,6 @@ class ScreenshotAnalyzerTool(BaseTool):
             "requires_action": False
         }
 
-    async def _arun(self, image_base64: str, user_description: Optional[str] = None) -> Dict[str, Any]:
-        return self._run(image_base64, user_description)
+    async def analyze_async(self, image_base64: str, user_description: Optional[str] = None) -> Dict[str, Any]:
+        """Async version"""
+        return self.analyze(image_base64, user_description)

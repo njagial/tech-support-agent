@@ -1,20 +1,9 @@
 # Deep Link Generator Tool
-from langchain.tools import BaseTool
-from pydantic import BaseModel, Field
 from typing import Dict, Any, Literal
 
-class DeepLinkInput(BaseModel):
-    issue_type: str = Field(description="Type of issue: wifi, battery, storage, permissions, etc.")
-    platform: Literal["ios", "android"] = Field(description="Target mobile platform")
 
-class DeepLinkGeneratorTool(BaseTool):
-    name: str = "generate_deep_link"
-    description: str = """
-    Generate a deep link to open native OS settings for troubleshooting.
-    Input: Issue type and platform.
-    Returns: Deep link URI and user-facing instructions.
-    """
-    args_schema: type[BaseModel] = DeepLinkInput
+class DeepLinkGeneratorTool:
+    """Generate deep links to open native OS settings for troubleshooting"""
 
     IOS_LINKS = {
         "wifi": {"uri": "App-Prefs:WIFI", "label": "Wi-Fi Settings"},
@@ -36,7 +25,8 @@ class DeepLinkGeneratorTool(BaseTool):
         "notifications": {"intent": "android.settings.APP_NOTIFICATION_SETTINGS", "label": "Notifications"},
     }
 
-    def _run(self, issue_type: str, platform: Literal["ios", "android"]) -> Dict[str, Any]:
+    def generate(self, issue_type: str, platform: Literal["ios", "android"]) -> Dict[str, Any]:
+        """Generate a deep link for the issue type"""
         if platform == "ios":
             link_data = self.IOS_LINKS.get(issue_type)
             if not link_data:
@@ -62,5 +52,6 @@ class DeepLinkGeneratorTool(BaseTool):
                 "instruction": f"Tap the button below to open {link_data['label']}"
             }
 
-    async def _arun(self, issue_type: str, platform: Literal["ios", "android"]) -> Dict[str, Any]:
-        return self._run(issue_type, platform)
+    async def generate_async(self, issue_type: str, platform: Literal["ios", "android"]) -> Dict[str, Any]:
+        """Async version"""
+        return self.generate(issue_type, platform)

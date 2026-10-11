@@ -1,26 +1,12 @@
 # Knowledge Base Search Tool
-from langchain.tools import BaseTool
-from pydantic import BaseModel, Field
-from typing import List, Dict, Any
-import logging
+from typing import Dict, Any, List
 
-logger = logging.getLogger(__name__)
 
-class KBSearchInput(BaseModel):
-    query: str = Field(description="Natural language query describing the technical issue")
-    top_k: int = Field(default=5, description="Number of results to return")
+class KnowledgeBaseSearchTool:
+    """Search the technical support knowledge base for relevant solutions"""
 
-class KnowledgeBaseSearchTool(BaseTool):
-    name: str = "search_tech_support_kb"
-    description: str = """
-    Search the technical support knowledge base for relevant solutions.
-    Input: Natural language description of the issue.
-    Returns: List of relevant KB articles with troubleshooting steps.
-    """
-    args_schema: type[BaseModel] = KBSearchInput
-
-    def _run(self, query: str, top_k: int = 5) -> Dict[str, Any]:
-        """Synchronous KB search - using mock data in development"""
+    def search(self, query: str, top_k: int = 5) -> Dict[str, Any]:
+        """Synchronous KB search - using mock data"""
         # In production, this would query Qdrant vector store
         mock_results = [
             {
@@ -44,8 +30,9 @@ class KnowledgeBaseSearchTool(BaseTool):
         return {
             "query": query,
             "results_found": len(mock_results),
-            "results": mock_results
+            "results": mock_results[:top_k]
         }
 
-    async def _arun(self, query: str, top_k: int = 5) -> Dict[str, Any]:
-        return self._run(query, top_k)
+    async def search_async(self, query: str, top_k: int = 5) -> Dict[str, Any]:
+        """Async version"""
+        return self.search(query, top_k)
